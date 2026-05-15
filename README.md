@@ -1,6 +1,6 @@
-# 🛡️ GovData Advanced Analytics
+# 🛡️ GovData Advanced Crime Analytics
 
-**GovData Advanced Analytics** is a robust, dynamic data visualization dashboard built with Python, Flask, Pandas, and Plotly. Designed with a premium "glassmorphism" aesthetic, this tool empowers users to effortlessly upload, explore, filter, and visualize complex datasets (like government crime data) directly in their web browser.
+**GovData Advanced Crime Analytics** is a robust, dynamic data visualization dashboard built with Python, Flask, Pandas, and Plotly. Designed with a premium "glassmorphism" aesthetic, this tool empowers users to effortlessly upload, explore, filter, and visualize complex datasets (like government crime data) directly in their web browser.
 
 ## ✨ Features
 
