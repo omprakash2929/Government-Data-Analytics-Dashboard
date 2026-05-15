@@ -1,3 +1,7 @@
 Flask
 pandas
 numpy
+plotly
+openpyxl
+gunicorn
+werkzeug
