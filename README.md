@@ -27,6 +27,12 @@
 - [Plotly.js](https://plotly.com/javascript/) (Interactive Frontend Rendering)
 - [html2pdf.js](https://github.com/eKoopmans/html2pdf.js) (PDF Generation)
 
+## 📸 ScreenShots
+![Analyticss](screenshots/img-1.png)
+![Analyticss](screenshots/img-2.png)
+![Analyticss](screenshots/img-3.png)
+
+
 ## 🚀 Installation & Setup
 
 1. **Clone the repository:**
