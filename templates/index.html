@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovData Analytics Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container" id="dashboard-content">
+        <header class="header glass-panel">
+            <div class="header-content">
+                <div>
+                    <h1>🛡️ GovData Advanced Analytics</h1>
+                    <p>Dynamic Data Visualization & Insights</p>
+                </div>
+                <div class="header-actions">
+                    <button id="export-pdf-btn" class="btn btn-outline">📄 Export PDF Report</button>
+                </div>
+            </div>
+        </header>
+
+        <section class="controls-section grid-container-small" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+            <div class="card glass-panel upload-card">
+                <h3>1. Upload Dataset</h3>
+                <form id="upload-form" class="upload-form">
+                    <input type="file" id="file-input" accept=".csv, .xls, .xlsx, .json" required class="file-input" style="width: 100%;">
+                    <button type="submit" class="btn btn-primary" id="upload-btn" style="width: 100%;">Upload & Analyze</button>
+                </form>
+                <div id="upload-status" class="status-msg"></div>
+            </div>
+            
+            <div class="card glass-panel filter-card">
+                <h3>2. Search & Filter</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                    <select id="filter-column-select" class="text-input" style="width: 100%;">
+                        <option value="all">All Columns</option>
+                    </select>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="search-input" placeholder="Search..." class="text-input" style="flex: 1; min-width: 0;">
+                        <button id="search-btn" class="btn btn-secondary">Search</button>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Currently Viewing: </span>
+                    <span id="row-count" class="stat-number">0</span>
+                    <span class="stat-label" style="margin-left: 10px;">rows</span>
+                </div>
+            </div>
+
+            <div class="card glass-panel chart-options-card">
+                <h3>3. Custom Chart Generator</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="chart-x-col" class="text-input" style="flex: 1; min-width: 0;">
+                            <option value="">X-Axis (Category)</option>
+                        </select>
+                        <select id="chart-y-col" class="text-input" style="flex: 1; min-width: 0;">
+                            <option value="">Y-Axis (Numeric)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="chart-type" class="text-input" style="flex: 1; min-width: 0;">
+                            <option value="bar">Bar Chart</option>
+                            <option value="line">Line Chart</option>
+                            <option value="pie">Pie Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                        </select>
+                        <button id="generate-chart-btn" class="btn btn-primary" style="flex: 1; min-width: 0; padding: 0.75rem 0.5rem;">Generate</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Overview Section -->
+        <section class="summary-overview grid-container-small" id="summary-container" style="display: none; grid-template-columns: repeat(4, 1fr);">
+            <div class="card glass-panel stat-card-small">
+                <h4>Total Columns</h4>
+                <div class="stat-value-small" id="stat-cols">0</div>
+            </div>
+            <div class="card glass-panel stat-card-small">
+                <h4>Total Rows</h4>
+                <div class="stat-value-small" id="stat-rows">0</div>
+            </div>
+            <div class="card glass-panel stat-card-small">
+                <h4>Missing Values</h4>
+                <div class="stat-value-small" id="stat-missing">0</div>
+            </div>
+            <div class="card glass-panel stat-card-small">
+                <h4>Duplicates</h4>
+                <div class="stat-value-small" id="stat-dupes">0</div>
+            </div>
+        </section>
+
+        <main id="charts-container" class="grid-container auto-grid">
+            <div class="empty-state glass-panel" style="grid-column: 1 / -1;">
+                <p>Upload a CSV, Excel, or JSON dataset to automatically generate insights and charts.</p>
+            </div>
+        </main>
+        
+        <section class="data-table-section glass-panel" id="table-container" style="display: none;">
+            <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                <h3>Data Preview</h3>
+                <div class="row-limit-selector" style="display: flex; align-items: center; gap: 10px;">
+                    <label for="row-limit-select" style="color: var(--text-secondary);">Show rows:</label>
+                    <select id="row-limit-select" class="text-input" style="padding: 0.5rem; flex: 0 0 auto; width: 120px;">
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                        <option value="500">500</option>
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="data-table">
+                    <thead id="data-table-head"></thead>
+                    <tbody id="data-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
